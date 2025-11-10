@@ -41,11 +41,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Windows 11 Effects** - Native Mica and Acrylic backdrops via P/Invoke
 - **Centralized Theme Management** - Single subscription updates all open windows automatically
 - **Multiple Forms** - MainForm and SecondForm demonstrating different patterns
-- **Type Safety Examples** - TypeSafetyDemo.cs showcasing compile-time checking
 - **DevTools Support** - F12 keyboard shortcut for debugging
 
 **Architecture**:
 - Clean separation between WinForms and Blazor layers
+- Request/Response pattern for Blazor → WinForms communication
+- Pub/Sub event pattern for WinForms → Blazor notifications
 - SOLID principles with dependency injection
 - DRY principle - zero code duplication between patterns
 - Convention-based component discovery (e.g., MainForm → Main.razor)
@@ -71,4 +72,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 [1.0.0]: https://github.com/yourusername/WinFormsBlazor/releases/tag/v1.0.0
+
 

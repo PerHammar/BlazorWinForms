@@ -134,29 +134,29 @@ See the **WinFormsBlazor** demo project for complete examples including theming,
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     WinForms Host                           │
-│  ┌──────────────┐         ┌──────────────┐                 │
-│  │              │         │              │                 │
-│  │ MainForm     │         │  Theming     │                 │
-│  │              │         │  Manager     │                 │
-│  └──────┬───────┘         └──────────────┘                 │
-│         │                                                    │
-│         │  ┌─────────────────────────────────┐             │
-│         └──│    RequestDispatcher            │             │
-│            │  (Handles incoming requests)    │             │
-│            └─────────────┬───────────────────┘             │
+│  ┌──────────────┐         ┌──────────────┐                  │
+│  │              │         │              │                  │
+│  │ MainForm     │         │  Theming     │                  │
+│  │              │         │  Manager     │                  │
+│  └──────┬───────┘         └──────────────┘                  │
+│         │                                                   │
+│         │  ┌─────────────────────────────────┐              │
+│         └──│    RequestDispatcher            │              │
+│            │  (Handles incoming requests)    │              │
+│            └─────────────┬───────────────────┘              │
 │                          │                                  │
-│         ┌────────────────┴──────────────┐                  │
-│         │                               │                  │
-│    ┌────▼─────┐                  ┌──────▼──────┐          │
-│    │ Request  │                  │   Request   │          │
-│    │ Handler  │                  │   Handler   │          │
-│    │    #1    │                  │     #2      │          │
-│    └──────────┘                  └─────────────┘          │
+│         ┌────────────────┴──────────────┐                   │
+│         │                               │                   │
+│    ┌────▼─────┐                  ┌──────▼──────┐            │
+│    │ Request  │                  │   Request   │            │
+│    │ Handler  │                  │   Handler   │            │
+│    │    #1    │                  │     #2      │            │
+│    └──────────┘                  └─────────────┘            │
 │                                                             │
-│         ┌─────────────────────────────────┐                │
-│         │       EventBus                  │                │
-│         │  (Publishes events to Blazor)  │                │
-│         └─────────────┬───────────────────┘                │
+│         ┌─────────────────────────────────┐                 │
+│         │       EventBus                  │                 │
+│         │  (Publishes events to Blazor)   │                 │
+│         └─────────────┬───────────────────┘                 │
 └───────────────────────┼─────────────────────────────────────┘
                         │
                         │ WebView2 Boundary
@@ -168,12 +168,12 @@ See the **WinFormsBlazor** demo project for complete examples including theming,
 │         │   EventBridgeService            │                 │
 │         │  (Receives events from host)    │                 │
 │         └─────────────┬───────────────────┘                 │
-│                       │                                      │
+│                       │                                     │
 │         ┌─────────────▼───────────────┐                     │
 │         │   Blazor Components         │                     │
 │         │  (UI + Business Logic)      │                     │
 │         └─────────────┬───────────────┘                     │
-│                       │                                      │
+│                       │                                     │
 │         ┌─────────────▼───────────────┐                     │
 │         │    RequestService           │                     │
 │         │  (Sends requests to host)   │                     │
@@ -1165,3 +1165,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Made with ❤️ for the .NET community**
+

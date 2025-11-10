@@ -61,15 +61,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Documentation
 
 - [README.md](./README.md) - Comprehensive project documentation with quick start guide
-- [CLAUDE.md](./CLAUDE.md) - Developer guide with architecture details and best practices
 
 ---
 
 ## Links
 
 - **Documentation**: [README.md](./README.md)
-- **Developer Guide**: [CLAUDE.md](./CLAUDE.md)
 
 ---
 
 [1.0.0]: https://github.com/yourusername/WinFormsBlazor/releases/tag/v1.0.0
+

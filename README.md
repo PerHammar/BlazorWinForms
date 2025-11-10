@@ -54,7 +54,7 @@ This project demonstrates **BlazorWinForms.Sdk**, a reusable library for buildin
 
 - 🎯 **Dual Integration Patterns**: Choose **Inheritance** (`HybridFormBase`) or **Composition** (`HybridFormController`)
 - 🔌 **Dual Component Patterns**: Choose **Inheritance** (`HybridComponentBase`) or **Composition** (`HybridComponentController`)
-- 🔒 **Complete Type Safety**: All interop is compile-time checked using `IRequest<TResult>` and `IEvent`
+- 🔒 **Complete Type Safety**: All interop is compile-time checked using request/response and pub/sub patterns
 - 🔍 **Auto-Discovery**: Handlers automatically registered via reflection
 - 📦 **Modern .NET**: Built for .NET 9.0
 - ⚙️ **Configurable**: Namespace and component discovery can be customized
@@ -116,7 +116,8 @@ See the **WinFormsBlazor** demo project for complete examples including theming,
 
 ### 🏗️ Clean Architecture
 - **Separation of Concerns**: Clear boundaries between layers
-- **SOLID Principles**: Dependency injection, interface segregation
+- **Request/Response Pattern**: Type-safe commands from Blazor to WinForms
+- **Pub/Sub Events**: Type-safe notifications from WinForms to Blazor
 - **Flexible Integration**: Choose **Inheritance** (`HybridFormBase`) or **Composition** (`HybridFormController`)
 - **DRY Principle**: Zero code duplication between patterns
 - **Auto-Discovery**: Handlers automatically registered via reflection
@@ -1155,7 +1156,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [.NET 9.0](https://dotnet.microsoft.com/)
 - Uses [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) for modern UI
 - Powered by [WebView2](https://developer.microsoft.com/microsoft-edge/webview2/)
-- Inspired by clean architecture principles and CQRS patterns
+- Inspired by clean architecture principles
 
 ## Support
 
@@ -1165,4 +1166,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Made with ❤️ for the .NET community**
+
 

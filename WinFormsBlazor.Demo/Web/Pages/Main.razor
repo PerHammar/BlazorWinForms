@@ -1,0 +1,260 @@
+@page "/"
+@namespace WinFormsBlazor.Web.Pages
+@using WinFormsBlazor.Requests
+@using WinFormsBlazor.Events
+@inherits WinFormsBlazor.Web.HybridComponentBase
+
+<div class="container">
+    <h1>WinForms + Blazor Hybrid Demo</h1>
+
+    <div class="card">
+        <div class="status-badge">Connected to WinForms Host</div>
+        <p class="description">
+            This is a Blazor component running inside a WinForms application.
+            It demonstrates bidirectional communication using a strongly-typed interop framework.
+        </p>
+    </div>
+
+    <div class="card counter-section">
+        <h2>Interactive Counter</h2>
+        <p class="description">This counter state is managed entirely in Blazor</p>
+        <div class="counter-display">@currentCount</div>
+        <div class="button-group">
+            <button class="button" @onclick="IncrementCount">Increment (+1)</button>
+            <button class="button" @onclick="DecrementCount">Decrement (-1)</button>
+            <button class="button" @onclick="ResetCount">Reset</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Host Settings</h2>
+        <p class="description">These settings are retrieved from the WinForms host via Requests</p>
+        @if (settings != null)
+        {
+            <div class="info-row">
+                <span class="label">Current Theme:</span>
+                <span class="value">@settings.Theme</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Backdrop Type:</span>
+                <span class="value">@settings.BackdropType</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Notifications:</span>
+                <span class="value">@(settings.NotificationsEnabled ? "Enabled" : "Disabled")</span>
+            </div>
+        }
+        else
+        {
+            <p>Loading settings...</p>
+        }
+        <div class="button-group" style="margin-top: 15px;">
+            <button class="button" @onclick="RefreshSettings">Refresh Settings</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Theme Switcher</h2>
+        <p class="description">Change the application theme - affects both Blazor and WinForms</p>
+
+        @if (availableThemes != null && availableThemes.Count > 0)
+        {
+            <div class="theme-grid">
+                @foreach (var theme in availableThemes)
+                {
+                    <button class="theme-button @(IsCurrentTheme(theme) ? "active" : "")"
+                            @onclick="() => ChangeTheme(theme)">
+                        @theme
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <p>Loading themes...</p>
+        }
+    </div>
+
+    <div class="card">
+        <h2>Window Effect</h2>
+        <p class="description">Change the window backdrop effect (Mica, Acrylic, etc.)</p>
+
+        @if (availableBackdropTypes != null && availableBackdropTypes.Count > 0)
+        {
+            <div class="theme-grid">
+                @foreach (var backdropType in availableBackdropTypes)
+                {
+                    <button class="theme-button @(IsCurrentBackdropType(backdropType) ? "active" : "")"
+                            @onclick="() => ChangeBackdropType(backdropType)">
+                        @backdropType
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <p>Loading backdrop types...</p>
+        }
+    </div>
+
+    <div class="card">
+        <h2>Interactive Communication Demo</h2>
+        <p class="description">Bidirectional communication between WinForms and Blazor</p>
+
+        <div style="margin-bottom: 20px;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Send Text to WinForms</h3>
+            <div class="button-group">
+                <input type="text"
+                       @bind="textToSend"
+                       placeholder="Enter text to send to WinForms..."
+                       style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-color); color: var(--fg-color);" />
+                <button class="button" @onclick="SendTextToForm">Send to WinForms</button>
+            </div>
+        </div>
+
+        <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Events from WinForms</h3>
+            @if (!string.IsNullOrEmpty(lastEventMessage))
+            {
+                <div style="padding: 15px; background-color: var(--hover-color); border-left: 4px solid var(--accent-color); border-radius: 4px;">
+                    <p style="margin: 0;"><strong>Latest Event:</strong> @lastEventMessage</p>
+                    <p style="margin: 5px 0 0 0; opacity: 0.7; font-size: 0.9rem;">Received at: @lastEventTimestamp</p>
+                </div>
+            }
+            else
+            {
+                <p style="opacity: 0.7;">Click the "Send Event to Blazor" button in the WinForms window below...</p>
+            }
+        </div>
+    </div>
+
+    <div class="card demo-section">
+        <h2>How It Works</h2>
+        <p class="description">
+            <strong>Requests (Blazor → WinForms):</strong> When you click "Refresh Settings" or change themes,
+            Blazor sends a request to the WinForms host via <code>RequestService</code>.
+        </p>
+        <p class="description">
+            <strong>Events (WinForms → Blazor):</strong> When the theme changes in WinForms,
+            a <code>ThemeChanged</code> event is sent to Blazor via <code>EventBridgeService</code>.
+        </p>
+        <p class="description">
+            Both communication patterns use a strongly-typed interop architecture with automatic handler discovery via reflection.
+        </p>
+    </div>
+</div>
+
+@code {
+    private int currentCount = 0;
+    private UserSettings? settings;
+    private List<string>? availableThemes;
+    private List<string>? availableBackdropTypes;
+
+    private string textToSend = "";
+    private string lastEventMessage = "";
+    private string lastEventTimestamp = "";
+
+    protected override async Task OnHybridInitializedAsync()
+    {
+        // Subscribe to events - auto-disposed by base class
+        SubscribeToEvent<ThemeChanged>(async e =>
+        {
+            await RefreshSettings();
+            await InvokeAsync(StateHasChanged);
+        });
+
+        SubscribeToEvent<FormButtonClicked>(async e =>
+        {
+            lastEventMessage = e.Message;
+            lastEventTimestamp = e.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await LoadAvailableThemes();
+        await LoadAvailableBackdropTypes();
+        await RefreshSettings();
+    }
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private void DecrementCount()
+    {
+        currentCount--;
+    }
+
+    private void ResetCount()
+    {
+        currentCount = 0;
+    }
+
+    private async Task RefreshSettings()
+    {
+        var result = await SendRequest(new GetUserSettings());
+        if (result.Success && result.Data != null)
+        {
+            settings = result.Data;
+            await ApplyTheme(settings.Theme);
+        }
+    }
+
+    private async Task LoadAvailableThemes()
+    {
+        var result = await SendRequest(new GetAvailableThemes());
+        if (result.Success && result.Data != null)
+        {
+            availableThemes = result.Data;
+        }
+    }
+
+    private async Task LoadAvailableBackdropTypes()
+    {
+        var result = await SendRequest(new GetAvailableBackdropTypes());
+        if (result.Success && result.Data != null)
+        {
+            availableBackdropTypes = result.Data;
+        }
+    }
+
+    private async Task ChangeTheme(string themeName)
+    {
+        var result = await SendRequest(new ChangeTheme(themeName));
+        if (result.Success)
+        {
+            await RefreshSettings();
+        }
+    }
+
+    private async Task ChangeBackdropType(string backdropTypeName)
+    {
+        var result = await SendRequest(new ChangeBackdropType(backdropTypeName));
+        if (result.Success)
+        {
+            await RefreshSettings();
+        }
+    }
+
+    private bool IsCurrentTheme(string themeName)
+    {
+        return settings?.Theme == themeName;
+    }
+
+    private bool IsCurrentBackdropType(string backdropTypeName)
+    {
+        return settings?.BackdropType == backdropTypeName;
+    }
+
+    private async Task SendTextToForm()
+    {
+        if (string.IsNullOrWhiteSpace(textToSend))
+            return;
+
+        var result = await SendRequest(new UpdateFormText(textToSend));
+        if (result.Success)
+        {
+            textToSend = "";
+        }
+    }
+}

@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>BlazorWinForms</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>BlazorWinForms.Sdk</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>WinFormsBlazor Contributors</Authors>
+    <Description>A production-ready SDK for building hybrid WinForms + Blazor applications. Provides strongly-typed interop, base classes, and type-safe communication between WinForms host and Blazor guest using Request/Response and Event patterns.</Description>
+    <PackageTags>blazor;winforms;hybrid;webview2;interop;request-response;events</PackageTags>
+    <PackageProjectUrl>https://github.com/yourusername/WinFormsBlazor</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/yourusername/WinFormsBlazor</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Blazor WebView for WinForms -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="9.0.0" />
+  </ItemGroup>
+
+  <!-- wwwroot/js/eventBridge.js kept for reference but not required at runtime -->
+  <!-- JavaScript is automatically injected via BridgeJavaScript.cs -->
+
+  <!-- Include README in package -->
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

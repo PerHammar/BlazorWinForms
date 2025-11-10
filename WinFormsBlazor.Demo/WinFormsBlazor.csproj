@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>WinFormsBlazor</RootNamespace>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="9.0.0" />
+  </ItemGroup>
+
+  <!-- Reference the BlazorWinForms.Sdk library -->
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorWinForms.Sdk\BlazorWinForms.Sdk.csproj" />
+  </ItemGroup>
+
+  <!-- Ensure Razor components are compiled before C# files -->
+  <PropertyGroup>
+    <RazorLangVersion>Latest</RazorLangVersion>
+  </PropertyGroup>
+
+  <!-- Embed wwwroot files as resources (tamper-proof) -->
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\**\*.*" />
+  </ItemGroup>
+
+  <!-- Extract embedded resources to temp folder at runtime -->
+  <PropertyGroup>
+    <ExtractWwwrootOnBuild>true</ExtractWwwrootOnBuild>
+  </PropertyGroup>
+
+</Project>

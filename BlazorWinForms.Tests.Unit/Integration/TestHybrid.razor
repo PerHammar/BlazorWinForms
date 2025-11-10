@@ -1,0 +1,23 @@
+@namespace BlazorWinForms.Tests.Unit.Integration
+@using BlazorWinForms.Interop
+
+<div class="test-hybrid-component">
+    <h1>Test Hybrid Component</h1>
+    <p>This is a test component for integration testing.</p>
+    <p>AppBridge Status: <span id="appBridgeStatus">@appBridgeStatus</span></p>
+    <p>Last Event: <span id="lastEvent">@lastEvent</span></p>
+</div>
+
+@code {
+    private string appBridgeStatus = "Checking...";
+    private string lastEvent = "None";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        // Check if appBridge is available in JavaScript
+        await Task.Delay(100);
+        appBridgeStatus = "Ready";
+    }
+}

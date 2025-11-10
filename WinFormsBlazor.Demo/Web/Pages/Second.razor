@@ -1,0 +1,88 @@
+@page "/second"
+@namespace WinFormsBlazor.Web.Pages
+@using WinFormsBlazor.Requests
+@using WinFormsBlazor.Events
+@inherits WinFormsBlazor.Web.HybridComponentBase
+
+<div class="container" style="max-width: 600px;">
+    <h1>Simple Demo Window</h1>
+
+    <div class="card">
+        <h2>Welcome!</h2>
+        <p class="description">
+            This is a second window showing that multiple forms can host different Blazor components,
+            each with their own isolated UI while sharing the same interop infrastructure.
+        </p>
+    </div>
+
+    <div class="card counter-section">
+        <h2>Quick Counter</h2>
+        <div class="counter-display">@localCount</div>
+        <div class="button-group">
+            <button class="button" @onclick="IncrementLocal">+10</button>
+            <button class="button" @onclick="DecrementLocal">-10</button>
+            <button class="button" @onclick="ResetLocal">Reset</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Current Theme</h2>
+        <p class="description">This window also responds to theme changes</p>
+        @if (currentTheme != null)
+        {
+            <div class="info-row">
+                <span class="label">Theme:</span>
+                <span class="value">@currentTheme</span>
+            </div>
+        }
+        else
+        {
+            <p>Loading theme...</p>
+        }
+    </div>
+
+    <div class="card">
+        <h2>Quick Actions</h2>
+        <div class="button-group">
+            <button class="button" @onclick="RefreshTheme">Refresh Theme</button>
+            <button class="button" style="background-color: #dc3545;" @onclick="CloseWindow">Close Window</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int localCount = 0;
+    private string? currentTheme;
+
+    protected override async Task OnHybridInitializedAsync()
+    {
+        // Subscribe to theme changes - auto-disposed by base class
+        SubscribeToEvent<ThemeChanged>(async e =>
+        {
+            currentTheme = e.ThemeName;
+            await ApplyTheme(e.ThemeName);
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await RefreshTheme();
+    }
+
+    private void IncrementLocal() => localCount += 10;
+    private void DecrementLocal() => localCount -= 10;
+    private void ResetLocal() => localCount = 0;
+
+    private async Task RefreshTheme()
+    {
+        var result = await SendRequest(new GetUserSettings());
+        if (result.Success && result.Data != null)
+        {
+            currentTheme = result.Data.Theme;
+            await ApplyTheme(currentTheme);
+        }
+    }
+
+    private async Task CloseWindow()
+    {
+        await SendRequest(new CloseSecondForm());
+    }
+}

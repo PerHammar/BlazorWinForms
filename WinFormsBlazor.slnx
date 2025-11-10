@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="WinFormsBlazor.Demo\WinFormsBlazor.csproj" />
+  <Project Path="BlazorWinForms.Sdk\BlazorWinForms.Sdk.csproj" />
+  <Project Path="BlazorWinForms.Tests.Unit\BlazorWinForms.Tests.Unit.csproj" />
+</Solution>
